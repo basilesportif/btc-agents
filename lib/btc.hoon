@@ -67,13 +67,30 @@
 ::
 ++  psbt
   |%
-  ::  +create: make base64 cord of PSBT
   ::
-  ++  create
+  ++  en
+    |%
+    ++  global
+      |=  =rawtx
+      ^-  map:^psbt
+      *map:^psbt
+    ++  inputs
+      |=  (list in:^psbt)
+      ^-  map:^psbt
+      *map:^psbt
+    ++  outputs
+      |=  (list out:^psbt)
+      ^-  map:^psbt
+      *map:^psbt
+    --
+  ::  +encode: make base64 cord of PSBT
+  ::
+  ++  encode
     |=  [=rawtx =txid inputs=(list in:^psbt) outputs=(list out:^psbt)]
     ^-  cord
     :: TODO
     ::  make global map
+    ::  raw tx hex
     :: turn each input and output into a map (or ~)
     ::  put the 0x0 separator between all
     ::  parse to hex
