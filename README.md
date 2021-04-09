@@ -1,5 +1,7 @@
 # btc-agents - Bitcoin on Urbit
 
+[![awesome urbit badge](https://img.shields.io/badge/~-awesome%20urbit-lightgrey)](https://github.com/urbit/awesome-urbit)
+
 ## BTC and ElectRS requirements
 Utilities located [here](https://github.com/timlucmiptev/urbit-bitcoin-rpc). Use the provided `mainnet.sh` and `testnet.sh` scripts.
 - BTC fully sync'd node
