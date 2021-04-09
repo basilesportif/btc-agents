@@ -5,18 +5,7 @@
 =,  strand=strand:spider
 =>
 |%
-++  rpc-url  "http://localhost:50002"
 ++  addr  ^-(address:bc [%bech32 'bc1q39wus23jwe7m2j7xmrfr2svhrtejmsn262x3j2'])
-::
-::  convert address to Electrs ScriptHash that it uses to index
-::   big-endian sha256 of the output script
-::
-++  electrs-scripthash
-  |=  a=address:bc
-  ^-  hexb:bc
-  %-  flip:byt:bc
-  %-  sha256:bc
-  (to-script-pubkey:adr:bc a)
 ::
 ++  parse-json-rpc
   |=  jon=json
@@ -62,7 +51,7 @@
 ++  brpc
   |%
   ++  req
-    |=  [type=?(%btc %electrs) rpc-call=json]
+    |=  [rpc-url=tape type=?(%btc %electrs) rpc-call=json]
     ^-  request:http
     =/  url=@ta
       %-  crip
@@ -89,6 +78,15 @@
         method+s+method
         params+a+params
     ==
+  ::  convert address to Electrs ScriptHash that it uses to index
+  ::   big-endian sha256 of the output script
+  ::
+  ++  electrs-scripthash
+    |=  a=address:bc
+    ^-  hexb:bc
+    %-  flip:byt:bc
+    %-  sha256:bc
+    (to-script-pubkey:adr:bc a)
   ::
   ++  calls
     |%
@@ -121,13 +119,16 @@
 ::  =+  !<([~ a=@ud] arg)
 =/  m  (strand ,vase)
 ^-  form:m
-;<  ~  bind:m  (attempt-request (req:brpc %btc block-count:calls:brpc))
+=/  rpc-url=tape  "http://localhost:50002"
+;<  ~  bind:m
+  (attempt-request (req:brpc rpc-url %btc block-count:calls:brpc))
 ;<  rep=client-response:iris  bind:m
   take-client-response:strandio
 ;<  rpc-resp=response:rpc  bind:m
   (parse-response rep)
 ~&  >  rpc-resp
-;<  ~  bind:m  (attempt-request (req:brpc %btc fee:calls:brpc))
+;<  ~  bind:m
+  (attempt-request (req:brpc rpc-url %btc fee:calls:brpc))
 ;<  rep=client-response:iris  bind:m
   take-client-response:strandio
 ;<  rpc-resp=response:rpc  bind:m
