@@ -7,25 +7,9 @@ Should return `block-info` result
 -btc-rpc
 ```
 
-
-  +$  httr  [p=@ud q=mess r=(unit octs)]                ::  raw http response
-  +$  math  (map @t (list @t))                          ::  semiparsed headers
-  +$  mess  (list [p=@t q=@t])                          
-
-
-  +$  response-header
-    $:  ::  status: http status code
-        ::
-        status-code=@ud
-        ::  headers: http headers
-        ::
-        headers=header-list
-        
-+$  header-list
-(list [key=@t value=@t])
-
-
-  +$  mime-data
-    [type=@t data=octs]
-
-
+## parsing POC
+It's ok to just parse one (or more) keys in a multi-key thing. The below parses only the "tim" key.
+```
+=p (ot:dejs:format ~[[%tim ni:dejs:format]])
+(p (pairs:enjs:format ~[[%tim [%n '2']] [%blah [%s '3']]]))
+```
