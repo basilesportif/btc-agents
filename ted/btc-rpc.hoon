@@ -42,12 +42,35 @@
     |=  [status=@ud hs=header-list:http data=(unit octs)]
     [%fail status hs data]
   --
-::
-++  attempt-request
-  |=  =request:http
-  =/  m  (strand:strandio ,~)
+++  run-rpc
+  |=  [rpc-url=tape req=request:http]
+  =/  m  (strand:strandio ,response:rpc)
   ^-  form:m
-  (send-request:strandio request)
+  ;<  ~  bind:m  (send-request:strandio req)
+  ;<  rep=client-response:iris  bind:m
+    take-client-response:strandio
+  ;<  rpc-resp=response:rpc  bind:m
+    (parse-response rep)
+  (pure:m rpc-resp)
+::
+++  types
+  |%
+  +$  block-info
+    $:  block=@ud
+        fee=sats:bc
+        block-hash=hexb:bc
+        block-filter=hexb:bc
+    ==
+  --
+++  api
+  |_  rpc-url=tape
+  ++  block-info
+    =/  m  (strand:strandio ,block-info:types)
+    ^-  form:m
+    :: TODO: put all chained calls here
+    (pure:m *block-info:types)
+  --
+::
 ++  brpc
   |%
   ++  req
@@ -120,17 +143,9 @@
 =/  m  (strand ,vase)
 ^-  form:m
 =/  rpc-url=tape  "http://localhost:50002"
-;<  ~  bind:m
-  (attempt-request (req:brpc rpc-url %btc block-count:calls:brpc))
-;<  rep=client-response:iris  bind:m
-  take-client-response:strandio
 ;<  rpc-resp=response:rpc  bind:m
-  (parse-response rep)
+  (run-rpc rpc-url (req:brpc rpc-url %btc block-count:calls:brpc))
 ~&  >  rpc-resp
-;<  ~  bind:m
-  (attempt-request (req:brpc rpc-url %btc fee:calls:brpc))
-;<  rep=client-response:iris  bind:m
-  take-client-response:strandio
 ;<  rpc-resp=response:rpc  bind:m
-  (parse-response rep)
+  (run-rpc rpc-url (req:brpc rpc-url %btc fee:calls:brpc))
 (pure:m !>(rpc-resp))
