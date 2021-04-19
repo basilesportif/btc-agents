@@ -3,6 +3,7 @@
 ::
 /-  sur=bitcoin
 =,  sur
+^?
 |%
 ::
 ::  TODO: move this bit/byt stuff to zuse

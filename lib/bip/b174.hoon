@@ -3,6 +3,7 @@
 ::
 /-  sur=bitcoin
 /+  bcu=bitcoin-utils
+^?
 =,  sur
 =,  bcu
 |%
