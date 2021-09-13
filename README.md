@@ -1,3 +1,9 @@
+**OUTDATED**
+This code has been merged into [urbit/urbit](https://github.com/urbit/urbit)
+
+-----------------------------------------------------
+
+
 # btc-agents - Bitcoin on Urbit
 
 [![awesome urbit badge](https://img.shields.io/badge/~-awesome%20urbit-lightgrey)](https://github.com/urbit/awesome-urbit)
